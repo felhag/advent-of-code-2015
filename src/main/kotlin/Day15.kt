@@ -13,8 +13,32 @@ private fun part15a(ingredients: List<Ingredient>): Int {
     return next(ingredients.associateWith { 100 / ingredients.size }.toMutableMap())
 }
 
-private fun part15b(ingredients: List<Ingredient>): Int {
-    return next(ingredients.associateWith { 100 / ingredients.size }.toMutableMap())
+private fun part15b(ings: List<Ingredient>): Int {
+    var max = 0
+    for (i in 0..100) {
+        for (j in 0..100-i) {
+            for (k in 0..100-i-j) {
+                val h = 100 - i - j - k
+                val calories = ings[0].calories*i + ings[1].calories*j + ings[2].calories*k + ings[3].calories*h
+                if (calories != 500) {
+                    continue
+                }
+
+                val capacity = ings[0].capacity*i + ings[1].capacity*j + ings[2].capacity*k + ings[3].capacity*h
+                val durability = ings[0].durability*i + ings[1].durability*j + ings[2].durability*k + ings[3].durability*h
+                val flavor = ings[0].flavor*i + ings[1].flavor*j + ings[2].flavor*k + ings[3].flavor*h
+                val texture = ings[0].texture*i + ings[1].texture*j + ings[2].texture*k + ings[3].texture*h
+                if (listOf(capacity, durability, flavor, texture).any { it <= 0 }) {
+                    continue
+                }
+                val score = capacity * durability * flavor * texture
+                if (score > max) {
+                    max = score
+                }
+            }
+        }
+    }
+    return max
 }
 
 private fun next(current: Map<Ingredient, Int>): Int {
